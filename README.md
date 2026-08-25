@@ -1,36 +1,31 @@
-# Portfolio Mobile — Flutter + Neon (API Only)
+# Portfolio Mobile — Flutter
 
-Esta versão exibe somente dados carregados da API.
+Versão expandida do portfólio mobile com identidade Material 3 Expressive.
 
-## Comportamento
+## Navegação principal
 
-- Enquanto carrega: mostra uma tela de carregamento.
-- Se a API responder: mostra os dados do Neon.
-- Se a API falhar: mostra uma tela de erro com `Tentar novamente`.
-- Não existe fallback local com conteúdo antigo.
+- Início
+- Projetos
+- Sobre
 
-## Fluxo
+## Menu Explorar
 
-```text
-Flutter
-   ↓
-/api/mobile-data
-   ↓
-Vercel
-   ↓
-Neon PostgreSQL
-```
+- Habilidades
+- Experiência
+- Formação
+- GitHub
+- Serviços
+- Contato
+- Tema claro/escuro
 
-## Rotas tentadas pelo app
+Cada página possui uma composição própria para evitar repetição visual.
 
-1. `/api/mobile-data`
-2. `/api/data`
+## Dados dinâmicos
 
-## URL padrão
+O app continua consumindo:
 
-```text
-https://ericyikedaportfolio5.vercel.app
-```
+- `/api/mobile-data` para conteúdo do portfólio/Neon
+- GitHub público para o status e estatísticas públicas
 
 ## Executar
 
@@ -40,14 +35,33 @@ flutter pub get
 flutter run
 ```
 
-## Importante
+## Android
 
-Garanta que a rota:
-
-```text
-https://ericyikedaportfolio5.vercel.app/api/mobile-data
+```bash
+flutter build apk --release
 ```
 
-esteja publicada e retornando JSON.
 
-A `DATABASE_URL` deve permanecer apenas no backend/Vercel, nunca dentro do Flutter.
+## Correção Java/Gradle no Windows
+
+O Android Gradle Plugin deste projeto requer Java 17 ou superior.
+
+O projeto já está configurado para usar, por padrão:
+
+```text
+C:\Program Files\Android\Android Studio\jbr
+```
+
+Se esse caminho for diferente no seu computador, execute na raiz do projeto:
+
+```powershell
+.\corrigir-java.ps1
+```
+
+ou dê duplo clique em:
+
+```text
+corrigir-java.bat
+```
+
+O script procura automaticamente Android Studio/JDK 17+ e configura o Flutter e o Gradle.

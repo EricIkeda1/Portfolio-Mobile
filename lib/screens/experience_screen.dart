@@ -10,51 +10,63 @@ class ExperienceScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Experiência')),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(18, 0, 18, 28),
+        padding: const EdgeInsets.fromLTRB(18, 4, 18, 32),
         children: [
           Text(
-            'Minha experiência vem da construção de aplicações web e mobile, projetos acadêmicos e projetos próprios.',
+            'Experiência construída através de projetos reais, estudos e desenvolvimento contínuo.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          const SizedBox(height: 18),
-          const _ExperienceCard(
-            icon: Icons.phone_android_rounded,
-            title: 'Desenvolvimento Mobile',
-            description:
-                'Criação de aplicativos em Flutter, integração com APIs e bancos de dados, sincronização e interfaces responsivas.',
-          ),
-          const SizedBox(height: 12),
-          const _ExperienceCard(
-            icon: Icons.language_rounded,
-            title: 'Desenvolvimento Web',
-            description:
-                'Desenvolvimento de interfaces em React, sistemas administrativos, autenticação e publicação na Vercel.',
-          ),
-          const SizedBox(height: 12),
-          const _ExperienceCard(
-            icon: Icons.storage_rounded,
-            title: 'Banco de dados e Back-end',
-            description:
-                'Modelagem e integração com PostgreSQL, Neon e Supabase, além da criação de APIs para aplicações.',
-          ),
-          const SizedBox(height: 12),
-          const _ExperienceCard(
-            icon: Icons.school_rounded,
-            title: 'Engenharia de Software',
-            description:
-                'Formação com contato com arquitetura, qualidade, testes, segurança, desenvolvimento mobile, web e back-end.',
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 22),
           Container(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
-              color: colors.primaryContainer,
-              borderRadius: BorderRadius.circular(26),
+              color: colors.tertiaryContainer,
+              borderRadius: BorderRadius.circular(30),
             ),
-            child: Text(
-              'Esta seção pode virar conteúdo administrável no Neon futuramente, da mesma forma que os projetos e o “Quem sou eu”.',
-              style: TextStyle(color: colors.onPrimaryContainer),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.route_rounded,
+                  size: 42,
+                  color: colors.onTertiaryContainer,
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    'Do planejamento à entrega: interface, dados, integração e publicação.',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: colors.onTertiaryContainer,
+                        ),
+                  ),
+                ),
+              ],
             ),
+          ),
+          const SizedBox(height: 26),
+          const _JourneyStep(
+            icon: Icons.phone_android_rounded,
+            title: 'Mobile',
+            description:
+                'Aplicações em Flutter com interfaces responsivas, integração com APIs, autenticação e estratégias offline-first.',
+          ),
+          const _JourneyStep(
+            icon: Icons.language_rounded,
+            title: 'Web',
+            description:
+                'Interfaces em React e TypeScript, sistemas administrativos e experiências adaptadas para desktop e mobile.',
+          ),
+          const _JourneyStep(
+            icon: Icons.storage_rounded,
+            title: 'Back-end e dados',
+            description:
+                'APIs, PostgreSQL, Neon, Supabase, autenticação e integração entre aplicações e serviços.',
+          ),
+          const _JourneyStep(
+            icon: Icons.rocket_launch_rounded,
+            title: 'Deploy e evolução',
+            description:
+                'Versionamento com Git, publicação na Vercel, correções, melhorias de desempenho e evolução contínua dos projetos.',
+            last: true,
           ),
         ],
       ),
@@ -62,42 +74,55 @@ class ExperienceScreen extends StatelessWidget {
   }
 }
 
-class _ExperienceCard extends StatelessWidget {
+class _JourneyStep extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
+  final bool last;
 
-  const _ExperienceCard({
+  const _JourneyStep({
     required this.icon,
     required this.title,
     required this.description,
+    this.last = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(26),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            backgroundColor: colors.primaryContainer,
-            foregroundColor: colors.primary,
-            child: Icon(icon),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 54,
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: colors.primaryContainer,
+                foregroundColor: colors.primary,
+                child: Icon(icon, size: 21),
+              ),
+              if (!last)
+                Container(
+                  width: 2,
+                  height: 84,
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  color: colors.outlineVariant,
+                ),
+            ],
           ),
-          const SizedBox(width: 14),
-          Expanded(
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 5),
+                Text(title, style: Theme.of(context).textTheme.titleLarge),
+                const SizedBox(height: 6),
                 Text(
                   description,
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -105,8 +130,8 @@ class _ExperienceCard extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

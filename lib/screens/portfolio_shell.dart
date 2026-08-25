@@ -5,9 +5,13 @@ import '../models/portfolio_data.dart';
 import '../services/github_service.dart';
 import '../services/portfolio_api.dart';
 import '../widgets/floating_portfolio_nav.dart';
+import '../widgets/portfolio_logo.dart';
 import 'about_screen.dart';
 import 'contact_screen.dart';
 import 'experience_screen.dart';
+import 'services_screen.dart';
+import 'github_screen.dart';
+import 'education_screen.dart';
 import 'home_screen.dart';
 import 'project_detail_screen.dart';
 import 'projects_screen.dart';
@@ -32,6 +36,7 @@ class _PortfolioShellState extends State<PortfolioShell> {
   final _githubService = GitHubService();
 
   int selectedIndex = 0;
+  final PageController _pageController = PageController();
   PortfolioData? data;
   GitHubStatus? githubStatus;
   bool loading = true;
@@ -42,8 +47,13 @@ class _PortfolioShellState extends State<PortfolioShell> {
     super.initState();
     _load();
   }
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
-  Future<void> _load() async {
+Future<void> _load() async {
     if (!mounted) return;
 
     setState(() {
@@ -92,6 +102,16 @@ class _PortfolioShellState extends State<PortfolioShell> {
   }
 
   void _openPage(Widget page) {
+    final pageName = switch (page) {
+      SkillsScreen() => 'Habilidades',
+      ExperienceScreen() => 'Experiência',
+      EducationScreen() => 'Formação',
+      GitHubScreen() => 'GitHub',
+      ServicesScreen() => 'Serviços',
+      ContactScreen() => 'Contato',
+      _ => 'Abrindo',
+    };
+
     Navigator.of(context).push(_expressiveRoute(page));
   }
 
@@ -143,64 +163,153 @@ class _PortfolioShellState extends State<PortfolioShell> {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
         final colors = Theme.of(context).colorScheme;
 
+        final items = <_PortfolioMenuItem>[
+          _PortfolioMenuItem(
+            icon: Icons.auto_awesome_rounded,
+            title: 'Habilidades',
+            subtitle: 'Stack e tecnologias',
+            onTap: () {
+              Navigator.pop(context);
+              _openPage(const SkillsScreen());
+            },
+          ),
+          _PortfolioMenuItem(
+            icon: Icons.timeline_rounded,
+            title: 'Experiência',
+            subtitle: 'Minha jornada',
+            onTap: () {
+              Navigator.pop(context);
+              _openPage(const ExperienceScreen());
+            },
+          ),
+          _PortfolioMenuItem(
+            icon: Icons.school_rounded,
+            title: 'Formação',
+            subtitle: 'Engenharia de Software',
+            onTap: () {
+              Navigator.pop(context);
+              _openPage(const EducationScreen());
+            },
+          ),
+          _PortfolioMenuItem(
+            icon: Icons.code_rounded,
+            title: 'GitHub',
+            subtitle: 'Atividade pública',
+            onTap: () {
+              Navigator.pop(context);
+              _openPage(GitHubScreen(status: githubStatus));
+            },
+          ),
+          _PortfolioMenuItem(
+            icon: Icons.design_services_rounded,
+            title: 'Serviços',
+            subtitle: 'Como posso ajudar',
+            onTap: () {
+              Navigator.pop(context);
+              _openPage(
+                ServicesScreen(settings: currentData.settings),
+              );
+            },
+          ),
+          _PortfolioMenuItem(
+            icon: Icons.mail_outline_rounded,
+            title: 'Contato',
+            subtitle: 'Vamos conversar',
+            onTap: () {
+              Navigator.pop(context);
+              _openPage(
+                ContactScreen(settings: currentData.settings),
+              );
+            },
+          ),
+        ];
+
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+            padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(18, 8, 18, 18),
               decoration: BoxDecoration(
                 color: colors.surface,
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(32),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _MenuTile(
-                    icon: Icons.auto_awesome_rounded,
-                    title: 'Habilidades',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _openPage(const SkillsScreen());
-                    },
-                  ),
-                  _MenuTile(
-                    icon: Icons.timeline_rounded,
-                    title: 'Experiência',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _openPage(const ExperienceScreen());
-                    },
-                  ),
-                  _MenuTile(
-                    icon: Icons.mail_outline_rounded,
-                    title: 'Contato',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _openPage(
-                        ContactScreen(settings: currentData.settings),
-                      );
-                    },
-                  ),
-                  _MenuTile(
-                    icon: widget.themeMode == ThemeMode.dark
-                        ? Icons.light_mode_rounded
-                        : Icons.dark_mode_rounded,
-                    title: widget.themeMode == ThemeMode.dark
-                        ? 'Modo claro'
-                        : 'Modo escuro',
-                    onTap: () {
-                      Navigator.pop(context);
-                      widget.onThemeChanged(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 38,
+                        height: 4,
+                        margin: const EdgeInsets.only(bottom: 18),
+                        decoration: BoxDecoration(
+                          color: colors.outlineVariant,
+                          borderRadius: BorderRadius.circular(99),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Explorar',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Mais áreas do meu portfólio',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 18),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: items.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 1.28,
+                      ),
+                      itemBuilder: (context, index) {
+                        return _PortfolioMenuCard(item: items[index]);
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      tileColor: colors.surfaceContainerLow,
+                      leading: CircleAvatar(
+                        backgroundColor: colors.primaryContainer,
+                        foregroundColor: colors.primary,
+                        child: Icon(
+                          widget.themeMode == ThemeMode.dark
+                              ? Icons.light_mode_rounded
+                              : Icons.dark_mode_rounded,
+                        ),
+                      ),
+                      title: Text(
                         widget.themeMode == ThemeMode.dark
-                            ? ThemeMode.light
-                            : ThemeMode.dark,
-                      );
-                    },
-                  ),
-                ],
+                            ? 'Usar modo claro'
+                            : 'Usar modo escuro',
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () {
+                        Navigator.pop(context);
+                        widget.onThemeChanged(
+                          widget.themeMode == ThemeMode.dark
+                              ? ThemeMode.light
+                              : ThemeMode.dark,
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -211,7 +320,12 @@ class _PortfolioShellState extends State<PortfolioShell> {
 
   void _selectTab(int index) {
     if (index == selectedIndex) return;
-    setState(() => selectedIndex = index);
+
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 380),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   @override
@@ -249,8 +363,21 @@ class _PortfolioShellState extends State<PortfolioShell> {
 
     return Scaffold(
       extendBody: true,
+      extendBodyBehindAppBar: false,
       appBar: selectedIndex == 0
           ? AppBar(
+              titleSpacing: 18,
+              title: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  PortfolioLogo(size: 38),
+                  SizedBox(width: 10),
+                  Text(
+                    'Eric Y. Ikeda',
+                    style: TextStyle(fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
@@ -268,37 +395,14 @@ class _PortfolioShellState extends State<PortfolioShell> {
       body: SafeArea(
         top: selectedIndex != 0,
         bottom: false,
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 380),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        transitionBuilder: (child, animation) {
-          final key = child.key;
-          final newIndex = key is ValueKey<int> ? key.value : selectedIndex;
-          final direction = newIndex >= selectedIndex ? 1.0 : -1.0;
-
-          final slide = Tween<Offset>(
-            begin: Offset(.035 * direction, 0),
-            end: Offset.zero,
-          ).animate(
-            CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOutCubic,
-            ),
-          );
-
-          return FadeTransition(
-            opacity: animation,
-            child: SlideTransition(
-              position: slide,
-              child: child,
-            ),
-          );
-        },
-          child: KeyedSubtree(
-            key: ValueKey<int>(selectedIndex),
-            child: pages[selectedIndex],
-          ),
+        child: PageView(
+          controller: _pageController,
+          physics: const BouncingScrollPhysics(),
+          onPageChanged: (index) {
+            if (selectedIndex == index) return;
+            setState(() => selectedIndex = index);
+          },
+          children: pages,
         ),
       ),
       bottomNavigationBar: FloatingPortfolioNav(
@@ -325,16 +429,16 @@ class _LoadingScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 82,
-                height: 82,
+                width: 92,
+                height: 92,
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   color: colors.primaryContainer,
-                  borderRadius: BorderRadius.circular(28),
+                  borderRadius: BorderRadius.circular(30),
                 ),
-                child: Icon(
-                  Icons.cloud_sync_rounded,
-                  size: 38,
-                  color: colors.primary,
+                child: const PortfolioLogo(
+                  size: 64,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
               ),
               const SizedBox(height: 22),
@@ -439,24 +543,66 @@ class _ApiErrorScreen extends StatelessWidget {
   }
 }
 
-class _MenuTile extends StatelessWidget {
+class _PortfolioMenuItem {
   final IconData icon;
   final String title;
+  final String subtitle;
   final VoidCallback onTap;
 
-  const _MenuTile({
+  const _PortfolioMenuItem({
     required this.icon,
     required this.title,
+    required this.subtitle,
     required this.onTap,
+  });
+}
+
+class _PortfolioMenuCard extends StatelessWidget {
+  final _PortfolioMenuItem item;
+
+  const _PortfolioMenuCard({
+    required this.item,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(child: Icon(icon)),
-      title: Text(title),
-      trailing: const Icon(Icons.chevron_right_rounded),
-      onTap: onTap,
+    final colors = Theme.of(context).colorScheme;
+
+    return Material(
+      color: colors.surfaceContainerLow,
+      borderRadius: BorderRadius.circular(24),
+      child: InkWell(
+        onTap: item.onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: colors.primaryContainer,
+                foregroundColor: colors.primary,
+                child: Icon(item.icon, size: 20),
+              ),
+              const Spacer(),
+              Text(
+                item.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                item.subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
