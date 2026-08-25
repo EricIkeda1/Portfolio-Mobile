@@ -73,6 +73,13 @@ class AboutScreen extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         const _AboutArea(
+          icon: Icons.web_asset_rounded,
+          title: 'Front-end',
+          description:
+              'Criação de interfaces modernas, responsivas e intuitivas, com foco em usabilidade e experiência do usuário.',
+        ),
+        const SizedBox(height: 10),
+        const _AboutArea(
           icon: Icons.phone_android_rounded,
           title: 'Mobile',
           description:

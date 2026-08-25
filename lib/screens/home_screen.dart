@@ -154,6 +154,13 @@ class HomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           const _AreaCard(
+            icon: Icons.web_asset_rounded,
+            title: 'Front-end',
+            text:
+                'Criação de interfaces modernas, responsivas e intuitivas, com foco em usabilidade e experiência do usuário.',
+          ),
+          const SizedBox(height: 10),
+          const _AreaCard(
             icon: Icons.phone_android_rounded,
             title: 'Mobile',
             text:
