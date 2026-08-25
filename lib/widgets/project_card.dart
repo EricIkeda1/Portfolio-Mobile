@@ -24,16 +24,34 @@ class ProjectCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 150,
-              child: project.imageUrl != null && project.imageUrl!.isNotEmpty
-                  ? Image.network(
-                      project.imageUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          _ProjectCover(project: project),
-                    )
-                  : _ProjectCover(project: project),
+            Hero(
+              tag: 'project-cover-${project.id}',
+              flightShuttleBuilder: (
+                flightContext,
+                animation,
+                flightDirection,
+                fromHeroContext,
+                toHeroContext,
+              ) {
+                return FadeTransition(
+                  opacity: CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ),
+                  child: toHeroContext.widget,
+                );
+              },
+              child: SizedBox(
+                height: 150,
+                child: project.imageUrl != null && project.imageUrl!.isNotEmpty
+                    ? Image.network(
+                        project.imageUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) =>
+                            _ProjectCover(project: project),
+                      )
+                    : _ProjectCover(project: project),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 18),

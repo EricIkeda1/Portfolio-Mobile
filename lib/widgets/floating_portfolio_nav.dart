@@ -65,12 +65,29 @@ class FloatingPortfolioNav extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
-                              selected ? item.$2 : item.$1,
-                              color: selected
-                                  ? colors.primary
-                                  : colors.onSurfaceVariant,
-                              size: 22,
+                            AnimatedScale(
+                              scale: selected ? 1.08 : 1,
+                              duration: const Duration(milliseconds: 240),
+                              curve: Curves.easeOutBack,
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 180),
+                                transitionBuilder: (child, animation) =>
+                                    FadeTransition(
+                                  opacity: animation,
+                                  child: ScaleTransition(
+                                    scale: animation,
+                                    child: child,
+                                  ),
+                                ),
+                                child: Icon(
+                                  selected ? item.$2 : item.$1,
+                                  key: ValueKey(selected),
+                                  color: selected
+                                      ? colors.primary
+                                      : colors.onSurfaceVariant,
+                                  size: 22,
+                                ),
+                              ),
                             ),
                             const SizedBox(height: 3),
                             Text(

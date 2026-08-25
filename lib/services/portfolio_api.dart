@@ -10,50 +10,48 @@ class PortfolioApi {
     defaultValue: 'https://ericyikedaportfolio5.vercel.app',
   );
 
-  static const List<String> _paths = [
-    '/api/mobile-data',
-    '/api/data',
-  ];
-
   Future<PortfolioData> load() async {
-    Object? lastError;
+    final uri = Uri.parse('$baseUrl/api/mobile-data');
 
-    for (final path in _paths) {
-      try {
-        final response = await http
-            .get(
-              Uri.parse('$baseUrl$path'),
-              headers: const {'Accept': 'application/json'},
-            )
-            .timeout(const Duration(seconds: 12));
+    final response = await http
+        .get(
+          uri,
+          headers: const {
+            'Accept': 'application/json',
+          },
+        )
+        .timeout(const Duration(seconds: 15));
 
-        if (response.statusCode < 200 || response.statusCode >= 300) {
-          lastError = Exception('HTTP ${response.statusCode} em $path');
-          continue;
-        }
-
-        final decoded = jsonDecode(response.body);
-
-        if (decoded is! Map) {
-          lastError = const FormatException('Resposta da API não é um objeto.');
-          continue;
-        }
-
-        final data = PortfolioData.fromJson(
-          Map<String, dynamic>.from(decoded),
-        );
-
-        if (data.projects.isEmpty && data.settings.aboutText.isEmpty) {
-          lastError = const FormatException('A API retornou dados vazios.');
-          continue;
-        }
-
-        return data;
-      } catch (error) {
-        lastError = error;
-      }
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw Exception('HTTP ${response.statusCode} ao carregar o portfólio.');
     }
 
-    throw Exception('Não foi possível carregar o portfólio: $lastError');
+    final contentType = response.headers['content-type'] ?? '';
+    if (!contentType.toLowerCase().contains('application/json')) {
+      throw const FormatException('A API não retornou JSON.');
+    }
+
+    final decoded = jsonDecode(response.body);
+
+    if (decoded is! Map) {
+      throw const FormatException('Resposta da API em formato inválido.');
+    }
+
+    final map = Map<String, dynamic>.from(decoded);
+
+    if (map['error'] != null) {
+      throw Exception(map['error'].toString());
+    }
+
+    final data = PortfolioData.fromJson(map);
+
+    if (data.settings.aboutText.trim().isEmpty) {
+      throw const FormatException(
+        'portfolio_settings não foi retornado pela API.',
+      );
+    }
+
+    return data;
   }
+
 }

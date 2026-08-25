@@ -28,17 +28,20 @@ class ProjectDetailScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(18, 0, 18, 28),
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(32),
-            child: SizedBox(
-              height: 220,
-              child: project.imageUrl != null && project.imageUrl!.isNotEmpty
-                  ? Image.network(
-                      project.imageUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _cover(),
-                    )
-                  : _cover(),
+          Hero(
+            tag: 'project-cover-${project.id}',
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(32),
+              child: SizedBox(
+                height: 220,
+                child: project.imageUrl != null && project.imageUrl!.isNotEmpty
+                    ? Image.network(
+                        project.imageUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => _cover(),
+                      )
+                    : _cover(),
+              ),
             ),
           ),
           const SizedBox(height: 20),

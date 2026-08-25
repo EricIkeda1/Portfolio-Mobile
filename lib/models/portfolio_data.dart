@@ -100,8 +100,7 @@ class PortfolioData {
 
     final rawSettings = root['settings'] ??
         root['portfolio_settings'] ??
-        root['config'] ??
-        <String, dynamic>{};
+        root['config'];
 
     final rawProjects = root['projects'] ??
         root['portfolio_projects'] ??
@@ -110,9 +109,9 @@ class PortfolioData {
 
     return PortfolioData(
       settings: PortfolioSettings.fromJson(
-        rawSettings is Map<String, dynamic>
-            ? rawSettings
-            : Map<String, dynamic>.from(rawSettings as Map),
+        rawSettings is Map
+            ? Map<String, dynamic>.from(rawSettings)
+            : <String, dynamic>{},
       ),
       projects: rawProjects is List
           ? rawProjects
@@ -125,81 +124,4 @@ class PortfolioData {
     );
   }
 
-  static const fallback = PortfolioData(
-    settings: PortfolioSettings(
-      aboutText:
-          'Meu nome é Eric, sou desenvolvedor de software e gosto de pegar uma ideia e transformar em algo que realmente funcione. Desenvolvo sites, sistemas e aplicações, sempre tentando deixar tudo bem organizado, rápido e fácil de usar.\n\nGosto de acompanhar o projeto desde o começo, pensando em como ele vai funcionar, como vai ficar visualmente e também em como deixar o código bem feito. Pra mim, não adianta só ficar bonito, tem que funcionar bem e fazer sentido pra quem vai usar.\n\nTambém gosto bastante de criar projetos próprios, principalmente pra testar ideias, aprender coisas novas e melhorar como desenvolvedor.',
-      profileImageUrl:
-          'https://drive.google.com/thumbnail?id=18I4wMhuprbKT0OLBLvAvz12yAoPNQSNc&sz=w1000',
-      whatsapp: '(43)99636-9387',
-      email: 'ikedayuji.2002@gmail.com',
-      github: 'https://github.com/EricIkeda1',
-    ),
-    projects: [
-      PortfolioProject(
-        id: 5,
-        name: 'Proj Galeria De Fotos',
-        type: 'Sistema Web',
-        description:
-            'Desenvolvi uma plataforma web para divulgação de ensaios e trabalhos fotográficos. O projeto conta com galerias, sistema de login e uma área para adicionar novos conteúdos diretamente pelo site.',
-        tags: ['React'],
-        highlights: ['Autenticidade'],
-        github: 'https://blogjovemribeiro.vercel.app/',
-        color: '#4285FF',
-        imageUrl: null,
-        sortOrder: 1,
-      ),
-      PortfolioProject(
-        id: 1,
-        name: 'Ademiconnect',
-        type: 'CRM Mobile',
-        description:
-            'CRM Mobile desenvolvido com Flutter e Supabase, com sincronização em tempo real e funcionamento offline. Solução completa para gestão de relacionamento com clientes.',
-        tags: ['Flutter', 'Supabase', 'Mobile'],
-        highlights: [
-          'Sync em tempo real',
-          'Modo offline',
-          'Flutter + Supabase',
-        ],
-        github: 'https://github.com/EricIkeda1/Ademiconnect',
-        color: '#4285FF',
-        imageUrl: null,
-        sortOrder: 2,
-      ),
-      PortfolioProject(
-        id: 2,
-        name: 'Temperlights',
-        type: 'App Industrial',
-        description:
-            'Aplicativo para rastreabilidade da produção industrial, com acompanhamento em tempo real de cada etapa do processo de fabricação.',
-        tags: ['Mobile', 'Rastreabilidade', 'Produção'],
-        highlights: [
-          'Rastreabilidade',
-          'Produção industrial',
-          'Tempo real',
-        ],
-        github: 'https://github.com/EricIkeda1/Temperlights-Mobile',
-        color: '#5B9BFF',
-        imageUrl: null,
-        sortOrder: 3,
-      ),
-      PortfolioProject(
-        id: 3,
-        name: 'X4Glass',
-        type: 'Sistema Web',
-        description:
-            'Sistema de rastreabilidade para produção de vidros desenvolvido em equipe. Projeto colaborativo com foco em qualidade e organização de processos industriais.',
-        tags: ['Full Stack', 'Rastreabilidade', 'Equipe'],
-        highlights: [
-          'Desenvolvimento em equipe',
-          'Rastreabilidade',
-          'Full Stack',
-        ],
-        github: 'https://github.com/EricIkeda1/X4Glass',
-        color: '#7AB3FF',
-        imageUrl: null,
-        sortOrder: 4,
-      ),
-    ],
-  );
 }

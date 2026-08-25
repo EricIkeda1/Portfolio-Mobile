@@ -8,7 +8,7 @@ import '../widgets/section_title.dart';
 
 class HomeScreen extends StatelessWidget {
   final PortfolioData data;
-  final GitHubStatus githubStatus;
+  final GitHubStatus? githubStatus;
   final VoidCallback onOpenAbout;
   final VoidCallback onOpenProjects;
   final ValueChanged<PortfolioProject> onProjectTap;
@@ -177,14 +177,58 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _GitHubStatusCard extends StatelessWidget {
-  final GitHubStatus status;
+  final GitHubStatus? status;
 
   const _GitHubStatusCard({required this.status});
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final dotColor = status.isRecentlyActive
+    final current = status;
+
+    if (current == null) {
+      return Container(
+        padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+        decoration: BoxDecoration(
+          color: colors.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: colors.outlineVariant.withValues(alpha: .35),
+          ),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 23,
+              backgroundColor: colors.surfaceContainerHigh,
+              child: Icon(
+                Icons.cloud_off_rounded,
+                color: colors.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'GitHub indisponível',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    'Não foi possível carregar a atividade agora.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final dotColor = current.isRecentlyActive
         ? const Color(0xFF34A853)
         : colors.primary;
 
@@ -205,10 +249,10 @@ class _GitHubStatusCard extends StatelessWidget {
               CircleAvatar(
                 radius: 23,
                 backgroundColor: colors.primaryContainer,
-                backgroundImage: status.avatarUrl.isNotEmpty
-                    ? NetworkImage(status.avatarUrl)
+                backgroundImage: current.avatarUrl.isNotEmpty
+                    ? NetworkImage(current.avatarUrl)
                     : null,
-                child: status.avatarUrl.isEmpty
+                child: current.avatarUrl.isEmpty
                     ? Icon(Icons.code_rounded, color: colors.primary)
                     : null,
               ),
@@ -236,7 +280,7 @@ class _GitHubStatusCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        status.statusLabel,
+                        current.statusLabel,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
@@ -252,7 +296,7 @@ class _GitHubStatusCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  status.activityDescription,
+                  current.activityDescription,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -260,7 +304,7 @@ class _GitHubStatusCard extends StatelessWidget {
               ],
             ),
           ),
-          if (status.publicRepos > 0)
+          if (current.publicRepos > 0)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
               decoration: BoxDecoration(
@@ -268,7 +312,7 @@ class _GitHubStatusCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                '${status.publicRepos} repos',
+                '${current.publicRepos} repos',
                 style: TextStyle(
                   color: colors.onPrimaryContainer,
                   fontSize: 12,

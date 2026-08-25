@@ -104,20 +104,23 @@ class _ProjectListTile extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: SizedBox(
-                  width: 102,
-                  height: 102,
-                  child: project.imageUrl != null &&
-                          project.imageUrl!.isNotEmpty
-                      ? Image.network(
-                          project.imageUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              _cover(project, colors),
-                        )
-                      : _cover(project, colors),
+              Hero(
+                tag: 'project-cover-${project.id}',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    width: 102,
+                    height: 102,
+                    child: project.imageUrl != null &&
+                            project.imageUrl!.isNotEmpty
+                        ? Image.network(
+                            project.imageUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) =>
+                                _cover(project, colors),
+                          )
+                        : _cover(project, colors),
+                  ),
                 ),
               ),
               const SizedBox(width: 14),
