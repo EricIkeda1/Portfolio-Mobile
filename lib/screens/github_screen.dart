@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../models/github_status.dart';
+import '../services/external_link_service.dart';
 
 class GitHubScreen extends StatelessWidget {
   final GitHubStatus? status;
@@ -11,12 +11,6 @@ class GitHubScreen extends StatelessWidget {
     required this.status,
   });
 
-  Future<void> _open(String url) async {
-    final uri = Uri.tryParse(url);
-    if (uri != null && await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +151,11 @@ class GitHubScreen extends StatelessWidget {
             ],
             const SizedBox(height: 22),
             FilledButton.icon(
-              onPressed: () => _open(current.profileUrl),
+              onPressed: () => ExternalLinkService.openUrl(
+                context,
+                current.profileUrl,
+                errorMessage: 'Não foi possível abrir o GitHub.',
+              ),
               icon: const Icon(Icons.open_in_new_rounded),
               label: const Text('Abrir perfil no GitHub'),
             ),

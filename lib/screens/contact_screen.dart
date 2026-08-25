@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../models/portfolio_data.dart';
+import '../services/external_link_service.dart';
 
 class ContactScreen extends StatelessWidget {
   final PortfolioSettings settings;
@@ -11,15 +11,7 @@ class ContactScreen extends StatelessWidget {
     required this.settings,
   });
 
-  Future<void> _launch(String uri) async {
-    final url = Uri.tryParse(uri);
-    if (url != null && await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    }
-  }
 
-  String get _phoneDigits =>
-      settings.whatsapp.replaceAll(RegExp(r'[^0-9]'), '');
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +34,23 @@ class ContactScreen extends StatelessWidget {
                   icon: Icons.mail_outline_rounded,
                   title: 'E-mail',
                   subtitle: settings.email,
-                  onTap: () => _launch('mailto:${settings.email}'),
+                  onTap: () => ExternalLinkService.openEmail(context, settings.email),
                 ),
                 _ContactTile(
                   icon: Icons.chat_rounded,
                   title: 'WhatsApp',
                   subtitle: settings.whatsapp,
-                  onTap: () => _launch('https://wa.me/55$_phoneDigits'),
+                  onTap: () => ExternalLinkService.openWhatsApp(context, settings.whatsapp),
                 ),
                 _ContactTile(
                   icon: Icons.code_rounded,
                   title: 'GitHub',
                   subtitle: settings.github.replaceFirst('https://', ''),
-                  onTap: () => _launch(settings.github),
+                  onTap: () => ExternalLinkService.openUrl(
+                    context,
+                    settings.github,
+                    errorMessage: 'Não foi possível abrir o GitHub.',
+                  ),
                 ),
               ],
             ),
@@ -82,7 +78,7 @@ class ContactScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 FilledButton.icon(
-                  onPressed: () => _launch('mailto:${settings.email}'),
+                  onPressed: () => ExternalLinkService.openEmail(context, settings.email),
                   icon: const Icon(Icons.send_rounded),
                   label: const Text('Enviar e-mail'),
                 ),

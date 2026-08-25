@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../models/github_status.dart';
 import '../models/portfolio_data.dart';
+import '../services/external_link_service.dart';
 import '../widgets/project_card.dart';
 import '../widgets/section_title.dart';
 
@@ -22,13 +22,6 @@ class HomeScreen extends StatelessWidget {
     required this.onProjectTap,
   });
 
-  Future<void> _launch(String value) async {
-    if (value.isEmpty) return;
-    final uri = Uri.tryParse(value);
-    if (uri != null && await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,21 +97,24 @@ class HomeScreen extends StatelessWidget {
               _SocialButton(
                 tooltip: 'GitHub',
                 icon: Icons.code_rounded,
-                onTap: () => _launch(settings.github),
+                onTap: () => ExternalLinkService.openUrl(
+                  context,
+                  settings.github,
+                  errorMessage: 'Não foi possível abrir o GitHub.',
+                ),
               ),
               _SocialButton(
                 tooltip: 'E-mail',
                 icon: Icons.mail_outline_rounded,
-                onTap: () => _launch('mailto:${settings.email}'),
+                onTap: () => ExternalLinkService.openEmail(context, settings.email),
               ),
               _SocialButton(
                 tooltip: 'WhatsApp',
                 icon: Icons.chat_bubble_outline_rounded,
-                onTap: () {
-                  final phone =
-                      settings.whatsapp.replaceAll(RegExp(r'[^0-9]'), '');
-                  _launch('https://wa.me/55$phone');
-                },
+                onTap: () => ExternalLinkService.openWhatsApp(
+                  context,
+                  settings.whatsapp,
+                ),
               ),
             ],
           ),
