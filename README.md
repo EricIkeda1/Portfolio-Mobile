@@ -1,4 +1,3 @@
-```markdown
 # Portfolio Mobile
 
 Versão mobile do meu **portfólio pessoal**, desenvolvida em **Flutter** e **Dart**.
@@ -63,5 +62,4 @@ Confira meus outros projetos:
 
 ## Autor
 
-Desenvolvido por **Eric Ikeda**.
-```
+Desenvolvido por **EricIkeda1**.
