@@ -11,11 +11,51 @@ class ProjectDetailScreen extends StatelessWidget {
     required this.project,
   });
 
-  Future<void> _openProject() async {
-    if (project.github.isEmpty) return;
-    final uri = Uri.tryParse(project.github);
-    if (uri != null && await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+  Future<void> _openProject(BuildContext context) async {
+    final link = project.github.trim();
+
+    if (link.isEmpty) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Este projeto não possui um link disponível.'),
+        ),
+      );
+      return;
+    }
+
+    final uri = Uri.tryParse(link);
+
+    if (uri == null) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('O link deste projeto é inválido.'),
+        ),
+      );
+      return;
+    }
+
+    try {
+      final opened = await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!opened && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Não foi possível abrir este projeto.'),
+          ),
+        );
+      }
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Não foi possível abrir este projeto.'),
+        ),
+      );
     }
   }
 
@@ -99,7 +139,7 @@ class ProjectDetailScreen extends StatelessWidget {
           if (project.github.isNotEmpty) ...[
             const SizedBox(height: 26),
             FilledButton.icon(
-              onPressed: _openProject,
+              onPressed: () => _openProject(context),
               icon: const Icon(Icons.open_in_new_rounded),
               label: const Text('Abrir projeto'),
             ),
