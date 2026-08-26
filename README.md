@@ -1,67 +1,31 @@
-# Portfolio Mobile — Flutter
+# Portfólio Mobile
 
-Versão expandida do portfólio mobile com identidade Material 3 Expressive.
+Versão mobile do meu portfólio pessoal, desenvolvida em **Flutter** e **Dart**.
 
-## Navegação principal
+Criei este aplicativo para apresentar meus **projetos, habilidades, experiências e formação** de uma forma pensada especialmente para dispositivos móveis.
 
-- Início
-- Projetos
-- Sobre
+O app também possui integração com a **API do meu portfólio** e com o **GitHub**, permitindo carregar informações de forma dinâmica.
 
-## Menu Explorar
+## Tecnologias
 
-- Habilidades
-- Experiência
-- Formação
-- GitHub
-- Serviços
-- Contato
-- Tema claro/escuro
+- Flutter
+- Dart
+- Material Design
+- API REST
+- GitHub API
+- Vercel
 
-Cada página possui uma composição própria para evitar repetição visual.
+## Download
 
-## Dados dinâmicos
+**[Baixar APK](./apk/app-release.apk)**
 
-O app continua consumindo:
+## Portfólio Web
 
-- `/api/mobile-data` para conteúdo do portfólio/Neon
-- GitHub público para o status e estatísticas públicas
+**[ericyikedaportfolio5.vercel.app](https://ericyikedaportfolio5.vercel.app/)**
 
-## Executar
+## Autor
 
-```bash
-flutter clean
-flutter pub get
-flutter run
-```
+Desenvolvido por **EricIkeda1**
 
-## Android
+**[GitHub - EricIkeda1](https://github.com/EricIkeda1)**
 
-```bash
-flutter build apk --release
-```
-
-
-## Correção Java/Gradle no Windows
-
-O Android Gradle Plugin deste projeto requer Java 17 ou superior.
-
-O projeto já está configurado para usar, por padrão:
-
-```text
-C:\Program Files\Android\Android Studio\jbr
-```
-
-Se esse caminho for diferente no seu computador, execute na raiz do projeto:
-
-```powershell
-.\corrigir-java.ps1
-```
-
-ou dê duplo clique em:
-
-```text
-corrigir-java.bat
-```
-
-O script procura automaticamente Android Studio/JDK 17+ e configura o Flutter e o Gradle.
